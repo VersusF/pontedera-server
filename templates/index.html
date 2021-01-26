@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pontedera server</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function click() {
+            const ip = document.getElementById('ip');
+            ip.select();
+            document.execCommand("copy");
+            const toast = document.getElementById('copied');
+            toast.classList.replace('toast-hidden', 'toast-shown');
+            setTimeout(() => toast.classList.replace('toast-shown', 'toast-hidden'), 3000);
+        }
+    </script>
+</head>
+
+<body>
+    <form action="" method="post">
+    <div class="container">
+        {% if args.status == 'UP' or args.status == 'LOADING' %}
+            <input type="hidden" id="ip" value="{{args.ip}}" name="ip">
+            <div class="box">
+                <h2>Pontedera server</h2>
+                <h2 class="ip">
+                    {{args.ip}}
+                    <svg onclick="click()" aria-hidden="true" data-icon="copy" class="icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path fill="currentColor" d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z">
+                    </svg>
+                </h2>
+                <h3>Status: {{ args.status }}</h3>
+            </div>
+        {% else %}
+            <div class="box">
+                <h2>Pontedera server</h2>
+                <p class="pwd-label">Password:</p>
+                <input type="password" name="password" id="password" class="password">
+                {% if args.status == 'WRONG_PWD' %}
+                    <p class="error">Password errata</p>
+                {% endif %}
+                <input type="submit" name="submit" value="Accendi" class="button">
+            </div>
+        {% endif %}
+        <div id="copied" class="toast toast-hidden">
+            Copiato sugli appunti
+        </div>
+    </div>
+    </form>
+</body>
+
+</html>
