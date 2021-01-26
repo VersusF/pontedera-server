@@ -1,5 +1,4 @@
 from flask import Flask, request, render_template
-from livereload import Server
 import os
 import socket
 from threading import Timer
