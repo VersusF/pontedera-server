@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 import os
 import socket
 from threading import Timer
@@ -55,7 +55,7 @@ def login():
         args['ip'] = ip
     else:
         args['status'] = 'WRONG_PWD'
-    return render_template('index.html', args=args)
+    return redirect('/')
 
 
 def main():
