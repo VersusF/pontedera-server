@@ -33,7 +33,7 @@ def wake_on_lan():
 def main():
     global global_status
     args = {}
-    command = 'timeout 0.2s ping {} -c 1 -i 0.2 > /dev/null'.format(SERVER_LOCAL_IP)
+    command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
     ping_res = os.system(command)
     args['status'] = 'UP' if ping_res == 0 else global_status
     if args['status'] == 'UP' or args['status'] == 'LOADING':
