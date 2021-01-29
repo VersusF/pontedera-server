@@ -61,17 +61,14 @@ def login():
         return render_template('index.html', args=args)
 
 
-def main():
+@app.before_first_request
+def initialize():
     global right_pwd, mac
     with open(PWD_FILE, 'r') as f:
         right_pwd = f.readline().strip()
     with open(MAC_FILE, 'r') as f:
         mac = f.readline().strip()
-    # flask_wsgi_app = app.wsgi_app
-    # server = Server(flask_wsgi_app)
-    # server.serve()
-    app.run()
 
 
 if __name__ == "__main__":
-    main()
+    app.run()
