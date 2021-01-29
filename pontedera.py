@@ -64,9 +64,10 @@ def login():
 @app.before_first_request
 def initialize():
     global right_pwd, mac
-    with open(PWD_FILE, 'r') as f:
+    folder = os.path.dirname(__file__) + '/'
+    with open(folder + PWD_FILE, 'r') as f:
         right_pwd = f.readline().strip()
-    with open(MAC_FILE, 'r') as f:
+    with open(folder + MAC_FILE, 'r') as f:
         mac = f.readline().strip()
 
 
