@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect
 import os
 import socket
 from threading import Timer
+import hashlib
 
 
 SERVER_LOCAL_IP = '192.168.178.69'
@@ -46,8 +47,9 @@ def main():
 def login():
     global global_status
     args = {}
-    password = request.form['password']
-    if password == right_pwd:
+    password = request.form['password'].encode()
+    password_hash = hashlib.sha256(password).hexdigest()
+    if password_hash == right_pwd:
         wake_on_lan()
         ip = socket.gethostbyname(SERVER_DDNS)
         global_status = 'LOADING'
