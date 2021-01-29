@@ -8,10 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script>
         function click() {
-            const ip = document.getElementById('ip');
-            ip.select();
-            document.execCommand("copy");
-            const toast = document.getElementById('copied');
+            navigator.clipboard.writeText('{{args.ip}}');
             toast.classList.replace('toast-hidden', 'toast-shown');
             setTimeout(() => toast.classList.replace('toast-shown', 'toast-hidden'), 3000);
         }
@@ -22,7 +19,6 @@
     <form action="" method="post">
     <div class="container">
         {% if args.status == 'UP' or args.status == 'LOADING' %}
-            <input type="hidden" id="ip" value="{{args.ip}}" name="ip">
             <div class="box">
                 <h2>Pontedera server</h2>
                 <h2 class="ip">
