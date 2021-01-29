@@ -55,9 +55,10 @@ def login():
         global_status = 'LOADING'
         args['status'] = 'LOADING'
         args['ip'] = ip
+        return redirect('/')
     else:
         args['status'] = 'WRONG_PWD'
-    return redirect('/')
+        return render_template('index.html', args=args)
 
 
 def main():
