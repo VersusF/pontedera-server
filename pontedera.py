@@ -3,6 +3,7 @@ import os
 import socket
 from threading import Timer
 import hashlib
+import requests
 
 
 SERVER_LOCAL_IP = '192.168.178.69'
@@ -59,6 +60,13 @@ def login():
     else:
         args['status'] = 'WRONG_PWD'
         return render_template('index.html', args=args)
+
+
+@app.route("/shutdown", methods=["POST"])
+def shutdown():
+    #Confronto password
+    requests.get(SERVER_LOCAL_IP + "/shutdown")
+    return "OK"
 
 
 @app.before_first_request
