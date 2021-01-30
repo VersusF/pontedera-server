@@ -9,6 +9,7 @@
     <script>
         function click() {
             navigator.clipboard.writeText('{{args.ip}}');
+            const toast = document.getElementById('copied');
             toast.classList.replace('toast-hidden', 'toast-shown');
             setTimeout(() => toast.classList.replace('toast-shown', 'toast-hidden'), 3000);
         }
