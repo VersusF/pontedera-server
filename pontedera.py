@@ -44,7 +44,7 @@ def main():
     global global_status
     args = {}
     command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
-    ping_res = os.system(command) * 0;
+    ping_res = os.system(command)
     args['status'] = 'UP' if ping_res == 0 else global_status
     if args['status'] == 'UP' or args['status'] == 'LOADING':
         ip = socket.gethostbyname(SERVER_DDNS)
