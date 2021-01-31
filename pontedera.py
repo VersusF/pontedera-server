@@ -18,6 +18,8 @@ mac = ''
 
 app = Flask(__name__)
 
+### UTILS
+
 def set_status_down():
     global global_status
     global_status = 'DOWN'
@@ -31,12 +33,18 @@ def wake_on_lan():
     pass
 
 
+def shutdown():
+    pass
+
+
+### FLASK ROUTES
+
 @app.route('/', methods=['GET'])
 def main():
     global global_status
     args = {}
     command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
-    ping_res = os.system(command)
+    ping_res = os.system(command) * 0;
     args['status'] = 'UP' if ping_res == 0 else global_status
     if args['status'] == 'UP' or args['status'] == 'LOADING':
         ip = socket.gethostbyname(SERVER_DDNS)
@@ -65,8 +73,16 @@ def login():
 @app.route("/shutdown", methods=["POST"])
 def shutdown():
     #Confronto password
-    requests.get(SERVER_LOCAL_IP + "/shutdown")
-    return "OK"
+    try:
+        password = request.json['password'].encode()
+        password_hash = hashlib.sha256(password).hexdigest()
+        if password_hash == right_pwd:
+            shutdown()
+            return '', 201
+        else:
+            return '', 401
+    except:
+       return '', 400 
 
 
 @app.before_first_request
@@ -80,4 +96,4 @@ def initialize():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
