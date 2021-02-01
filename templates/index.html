@@ -54,10 +54,10 @@
 
 <body>
     <div class="container">
-        {% if args.status in ['UP', 'LOADING', 'SHUTDOWNING'] %}
+        {% if args.status in ['UP', 'LOADING', 'SHUTTING DOWN'] %}
             <div class="box">
                 <h2>Pontedera server</h2>
-                {% if args.status != 'SHUTDOWNING' %}
+                {% if args.status != 'SHUTTING DOWN' %}
                 <h2 class="ip">
                     {{args.ip}}
                     <svg onclick="copy()" aria-hidden="true" data-icon="copy" class="icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
