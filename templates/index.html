@@ -90,7 +90,7 @@
         <div id="backdrop" class="backdrop-hidden" onclick="dismissAlert()"></div>
         <div id="shutdown-alert" class="alert-hidden">
             <p>Sei sicuro di voler spegnere il server?</p>
-            <input type="password" name="password" id="alert-password" class="password" autocomplete="on" onclick="clearMessage()">
+            <input type="password" name="password" id="alert-password" class="password" autocomplete="on" onclick="clearMessage()" placeholder="Password">
             <p class="error" id="shutdown-error"></p>
             <button class="alert-button alert-dismiss" onclick="dismissAlert()">Annulla</button>
             <button class="alert-button alert-confirm" onclick="shutdown()">Spegni</button>
