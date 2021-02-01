@@ -6,46 +6,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pontedera server</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script>
-        function click() {
+        function copy() {
             navigator.clipboard.writeText('{{args.ip}}');
             const toast = document.getElementById('copied');
             toast.classList.replace('toast-hidden', 'toast-shown');
             setTimeout(() => toast.classList.replace('toast-shown', 'toast-hidden'), 3000);
         }
+        function presentAlert() {
+            const backdrop = document.getElementById('backdrop');
+            const shutdownAlert = document.getElementById('shutdown-alert');
+            backdrop.classList.replace('backdrop-hidden', 'backdrop-shown');
+            shutdownAlert.classList.replace('alert-hidden', 'alert-shown');
+        }
+        function dismissAlert() {
+            const backdrop = document.getElementById('backdrop');
+            const shutdownAlert = document.getElementById('shutdown-alert');
+            backdrop.classList.replace('backdrop-shown', 'backdrop-hidden');
+            shutdownAlert.classList.replace('alert-shown', 'alert-hidden');
+        }
+        function shutdown() {
+            const password = document.getElementById('alert-password').value;
+            const errorMessage = document.getElementById('shutdown-error');
+            fetch('/shutdown', {
+                method: 'POST',
+                body: JSON.stringify({
+                    password: password
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => {
+                if (res.status === 201) {
+                    window.location.href = '/';
+                } else {
+                    errorMessage.innerText = 'Password errata';
+                }
+            }).catch(() => {});
+        }
+        function clearMessage() {
+            const errorMessage = document.getElementById('shutdown-error');
+            errorMessage.innerText = '';
+        }
     </script>
 </head>
 
 <body>
-    <form action="" method="post">
     <div class="container">
-        {% if args.status == 'UP' or args.status == 'LOADING' %}
+        {% if args.status in ['UP', 'LOADING', 'SHUTTING DOWN'] %}
             <div class="box">
                 <h2>Pontedera server</h2>
+                {% if args.status != 'SHUTTING DOWN' %}
                 <h2 class="ip">
                     {{args.ip}}
-                    <svg onclick="click()" aria-hidden="true" data-icon="copy" class="icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <svg onclick="copy()" aria-hidden="true" data-icon="copy" class="icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                         <path fill="currentColor" d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z">
                     </svg>
                 </h2>
+                {% endif %}
                 <h3>Status: {{ args.status }}</h3>
+                {% if args.status == 'UP'  %}
+                <button class="shutdown-button" onclick="presentAlert()">Spegni</button>
+                {% endif %}
             </div>
         {% else %}
             <div class="box">
-                <h2>Pontedera server</h2>
-                <p class="pwd-label">Password:</p>
-                <input type="password" name="password" id="password" class="password">
-                {% if args.status == 'WRONG_PWD' %}
-                    <p class="error">Password errata</p>
-                {% endif %}
-                <input type="submit" name="submit" value="Accendi" class="button">
+                <form action="" method="post">
+                    <h2>Pontedera server</h2>
+                    <p class="pwd-label">Password:</p>
+                    <input type="password" name="password" id="password" class="password" autocomplete="on">
+                    {% if args.status == 'WRONG_PWD' %}
+                        <p class="error">Password errata</p>
+                    {% endif %}
+                    <input type="submit" name="submit" value="Accendi" class="button">
+                </form>
             </div>
         {% endif %}
         <div id="copied" class="toast toast-hidden">
             Copiato sugli appunti
         </div>
+        <!-- Shutdown alert -->
+        <div id="backdrop" class="backdrop-hidden" onclick="dismissAlert()"></div>
+        <div id="shutdown-alert" class="alert-hidden">
+            <p>Sei sicuro di voler spegnere il server?</p>
+            <input type="password" name="password" id="alert-password" class="password" autocomplete="on" onclick="clearMessage()" placeholder="Password">
+            <p class="error" id="shutdown-error"></p>
+            <button class="alert-button alert-dismiss" onclick="dismissAlert()">Annulla</button>
+            <button class="alert-button alert-confirm" onclick="shutdown()">Spegni</button>
+        </div>
     </div>
-    </form>
 </body>
 
 </html>
