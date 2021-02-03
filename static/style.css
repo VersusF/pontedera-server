@@ -213,3 +213,10 @@ h3 {
 .alert-dismiss:hover {
     background: var(--military-green);
 }
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    .box {
+        width: 90%;
+    }
+}
