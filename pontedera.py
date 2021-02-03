@@ -33,8 +33,9 @@ def wake_on_lan():
     pass
 
 
-def shutdown():
-    Timer(60, set_status_down).start()
+def shutdown_server():
+    requests.get("http://" + SERVER_LOCAL_IP + "/shutdown")
+    Timer(120, set_status_down).start()
 
 
 ### FLASK ROUTES
@@ -45,7 +46,7 @@ def main():
     args = {}
     command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
     ping_res = os.system(command)
-    args['status'] = 'UP' if ping_res == 0 and global_status != 'SHUTDOWNING' else global_status
+    args['status'] = 'UP' if ping_res == 0 and global_status != 'SHUTTING DOWN' else global_status
     if args['status'] == 'UP' or args['status'] == 'LOADING':
         ip = socket.gethostbyname(SERVER_DDNS)
         args['ip'] = ip
@@ -77,8 +78,8 @@ def shutdown():
         password = request.json['password'].encode()
         password_hash = hashlib.sha256(password).hexdigest()
         if password_hash == right_pwd:
-            shutdown()
-            global_status = 'SHUTDOWNING'
+            shutdown_server()
+            global_status = 'SHUTTING DOWN'
             return '', 201
         else:
             return '', 401
