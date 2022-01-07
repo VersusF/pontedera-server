@@ -8,5 +8,13 @@
 </head>
 <body>
     <h1>Benvenuto nel servizio di stampa remoto</h1>
+    <form action="{{args.submit_url}}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file_path" id="input_file_path" accept=".pdf">
+        <label for="copies">Numero di copie:</label>
+        <input type="number" name="copies" id="input_copies" min="1" max="100" step="1" value="1">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="input_passowrd">
+        <input type="submit" value="INVIA">
+    </form>
 </body>
 </html>

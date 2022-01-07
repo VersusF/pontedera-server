@@ -133,3 +133,4 @@ password.txt
 mac.txt
 .vscode
 *.pem
+tmp/
