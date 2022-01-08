@@ -2,12 +2,20 @@ import os
 from flask import Blueprint, render_template, request, redirect
 from dotenv import load_dotenv
 from bcrypt import checkpw
+from flask.helpers import flash
+from werkzeug.utils import secure_filename
 
 load_dotenv()
 
 printer = Blueprint("printer", __name__, template_folder="../templates")
 SERVER_LOCAL_IP = '192.168.178.69'
 COD_MAC = os.environ.get("COD_MAC")
+ALLOWED_EXTENSIONS = {'pdf'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS 
 
 
 def wake_on_lan():
@@ -24,7 +32,7 @@ def remote_print(filename, n_copies):
     os.system('scp {} cod@{}:/home/cod/to_print > /dev/null'
         .format("./tmp/" + filename, SERVER_LOCAL_IP))
     os.system('rm ./tmp/{} > /dev/null'.format(filename))
-    os.system('ssh cod@{} \'lp -n {} /home/cod/to_ptint/{}\' > /dev/null'
+    os.system('ssh cod@{} \'lp -n {} /home/cod/to_print/{}\' > /dev/null'
         .format(SERVER_LOCAL_IP, n_copies, filename))
 
 
@@ -42,14 +50,21 @@ def submit():
     if checkpw(password, pwd_hash):
         copies = request.form['copies']
         file = request.files['file_path']
-        file.save("./tmp/" +file.filename)
-        print(password, copies, file)
-        # command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
-        # ping_res = os.system(command)
-        # if ping_res == 0:
-        #     remote_print(file.filename, copies)
-        # else:
-        #     wake_on_lan()
+        if file.filename == '':
+            print("File non selezionato")
+            return redirect("/printer")
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save("./tmp/" + filename)
+            print(password, copies, file)
+            command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
+            ping_res = os.system(command)
+            if ping_res == 0:
+                remote_print(filename, copies)
+            else:
+                wake_on_lan()
+        else:
+            print("File non in formato PDF")
     else:
         print("Password sbagliata")
     return redirect("/printer")
