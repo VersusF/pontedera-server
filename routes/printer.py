@@ -15,8 +15,17 @@ def wake_on_lan():
     os.system('wakeonlan {} > /dev/null'.format(COD_MAC))
     # TODO Chiamare qui copy_file_to server? Bisogna aspettarere che si accenda il server.
 
-def copy_file_to_server(file_path):
-    os.system('scp {} cod@{}:/home/cod/to_print > /dev/null'.format(file_path, SERVER_LOCAL_IP))
+
+def remote_print(filename, n_copies):
+    """
+    Copy file to print to remote host, remove it from local resources
+    and start remote host print routine
+    """
+    os.system('scp {} cod@{}:/home/cod/to_print > /dev/null'
+        .format("./tmp/" + filename, SERVER_LOCAL_IP))
+    os.system('rm ./tmp/{} > /dev/null'.format(filename))
+    os.system('ssh cod@{} \'lp -n {} /home/cod/to_ptint/{}\' > /dev/null'
+        .format(SERVER_LOCAL_IP, n_copies, filename))
 
 
 @printer.route("", methods=["GET"])
@@ -33,15 +42,14 @@ def submit():
     if checkpw(password, pwd_hash):
         copies = request.form['copies']
         file = request.files['file_path']
-        file_save_path = "./tmp/" +file.filename
-        file.save(file_save_path)
+        file.save("./tmp/" +file.filename)
         print(password, copies, file)
-        command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
-        ping_res = os.system(command)
-        if ping_res == 0:
-            copy_file_to_server(file_save_path)
-        else:
-            wake_on_lan()
+        # command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
+        # ping_res = os.system(command)
+        # if ping_res == 0:
+        #     remote_print(file.filename, copies)
+        # else:
+        #     wake_on_lan()
     else:
         print("Password sbagliata")
     return redirect("/printer")
