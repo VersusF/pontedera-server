@@ -1,20 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
     <title>Pontedera Server</title>
 </head>
-<body>
-    <h1>
-        Benvenuto nel server "Pontedera"
-    </h1>
 
-    <h3>I nostri servizi:</h3>
-    <ul>
-        <li><a href="/cod">Server COD 4</a></li>
-        <li><a href="/printer">Servizio di stampa remoto</a></li>
-    </ul>
+<body>
+    <h1 class="main-title title">Pontedera Server</h1>
+
+    <h3 class="sub-title title">I nostri servizi:</h3>
+
+    <div class="buttons">
+        <ul class="grid">
+            <li class="grid-element" style="background-color: #518F63;">
+                <a href="/cod">
+                    <div class="grid-element-icon" style="background-color: #253f2c;">
+                        <img src="{{ url_for('static', filename='cod-icon.svg') }}" alt="Cod icon">
+                    </div>
+                    <div class="grid-element-text">
+                        <h5>Server COD 4</h5>
+                        <p>Server per LAN party da quarantena su Call of Duty Modern Warfare</p>
+                    </div>
+                </a>
+            </li>
+            <li class="grid-element" style="background-color: #2d8aae;">
+                <a href="/printer">
+                    <div class="grid-element-icon" style="background-color: #1a556d;">
+                        <img src="{{ url_for('static', filename='printer.svg') }}" alt="Printer icon">
+                    </div>
+                    <div class="grid-element-text">
+                        <h5>Stampante remota</h5>
+                        <p>Servizio per stampare file PDF da remoto con la stampante di casa Pontedera</p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
 </body>
+
 </html>
