@@ -2,7 +2,6 @@ import os
 from flask import Blueprint, render_template, request, redirect
 from dotenv import load_dotenv
 from bcrypt import checkpw
-from flask.helpers import flash
 from werkzeug.utils import secure_filename
 
 load_dotenv()
@@ -14,11 +13,17 @@ ALLOWED_EXTENSIONS = {'pdf'}
 
 
 def allowed_file(filename):
+    """
+    Check file type
+    """
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS 
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def wake_on_lan():
+    """
+    Launch wake on lan command to wake up print server
+    """
     # Lanciare pacchetto
     os.system('wakeonlan {} > /dev/null'.format(COD_MAC))
     # TODO Chiamare qui copy_file_to server? Bisogna aspettarere che si accenda il server.
