@@ -131,6 +131,5 @@ dmypy.json
 *.pdf
 password.txt
 mac.txt
-.vscode
 *.pem
 tmp/
