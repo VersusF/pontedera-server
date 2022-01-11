@@ -1,7 +1,10 @@
 from flask import Flask, render_template
 from routes.cod import cod
 from routes.printer import printer
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 app = Flask(__name__)
 app.register_blueprint(cod, url_prefix="/cod")

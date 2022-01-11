@@ -4,9 +4,14 @@ services:
   
   pontedera-server:
     build: .
-    image: pontedera/latest
     container_name: pontedera
     volumes:
       - ./src/:/usr/src/app/src/:ro
     ports:
       - "5000:5000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    container_name: pontedera-redis
