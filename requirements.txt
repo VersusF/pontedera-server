@@ -1,3 +1,4 @@
+bcrypt
 flask
 python-dotenv
-bcrypt
+requests
