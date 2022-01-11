@@ -12,7 +12,7 @@ up: ## Start pontedera server
 
 .PHONY: stop
 stop: ## Stop pontedera server
-	docker compose up
+	docker compose stop
 
 .PHONY: pip
 pip: ## Runs pip install on requirements on container
