@@ -34,11 +34,8 @@ def remote_print(filename, n_copies):
     Copy file to print to remote host, remove it from local resources
     and start remote host print routine
     """
-    os.system('scp {} cod@{}:/home/cod/to_print > /dev/null'
-        .format("./tmp/" + filename, SERVER_LOCAL_IP))
-    os.system('rm ./tmp/{} > /dev/null'.format(filename))
-    os.system('ssh cod@{} \'lp -n {} /home/cod/to_print/{}\' > /dev/null'
-        .format(SERVER_LOCAL_IP, n_copies, filename))
+    os.system('sh ./remote_print.sh {} {}& > /dev/null'
+        .format(filename, n_copies))
 
 
 @printer.route("", methods=["GET"])
