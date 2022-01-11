@@ -1,0 +1,33 @@
+body {
+  background-color: var(--dark);
+}
+
+.title {
+  color: var(--light);
+  text-align: center;
+}
+
+.main-title {
+  font-size: 4em;
+  font-family: var(--font-title);
+  font-weight: 700;
+}
+
+.sub-title {
+  font-size: 2em;
+  font-family: var(--font-subtitle);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tutorial {
+    font-family: Hind Madurai;
+    color: var(--light);
+    max-width: 120ch;
+}
