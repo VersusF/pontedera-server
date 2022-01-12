@@ -14,6 +14,10 @@ up: ## Start pontedera server
 stop: ## Stop pontedera server
 	docker compose stop
 
+.PHONY: restart-flask
+restart-flask: ## Restart pontedera server
+	docker restart pontedera
+
 .PHONY: pip
 pip: ## Runs pip install on requirements on container
 	docker exec -it pontedera pip install --no-cache-dir -r requirements.txt
@@ -25,3 +29,7 @@ shell: ## Opens a shell on pontedera server
 .PHONY: redis-cli
 redis-cli: ## Opens a shell on redis
 	docker exec -it pontedera-redis /usr/local/bin/redis-cli
+
+.PHONY: generate-pwd-hash
+generate-pwd-hash: ## Stop pontedera server
+	docker exec -it pontedera python3 src/utils/pwdhash.py

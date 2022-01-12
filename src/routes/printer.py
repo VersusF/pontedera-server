@@ -1,38 +1,20 @@
 import os
+import bcrypt
 from flask import Blueprint, render_template, request, redirect
-from bcrypt import checkpw
 from werkzeug.utils import secure_filename
-from services import RedisService
+from services import TokenService
 
 printer = Blueprint("printer", __name__, template_folder="../templates")
-SERVER_LOCAL_IP = '192.168.178.69'
+SERVER_LOCAL_IP = "192.168.178.69"
 COD_MAC = os.environ.get("COD_MAC")
-ALLOWED_EXTENSIONS = {'pdf'}
+ALLOWED_EXTENSIONS = {"pdf"}
 
 
 def allowed_file(filename):
     """
     Check file type
     """
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def wake_on_lan():
-    """
-    Launch wake on lan command to wake up print server
-    """
-    # Lanciare pacchetto
-    os.system('wakeonlan {} > /dev/null'.format(COD_MAC))
-    # TODO Chiamare qui copy_file_to server? Bisogna aspettarere che si accenda il server.
-
-
-def remote_print(filename, n_copies):
-    """
-    Copy file to print to remote host, remove it from local resources
-    and start remote host print routine
-    """
-    os.system('sh ./remote_print.sh {} {}& > /dev/null'.format(filename, n_copies))
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @printer.route("", methods=["GET"])
@@ -42,36 +24,45 @@ def main():
     })
 
 
-@printer.route("/status", methods=["GET"])
-def status():
-    printer_status = RedisService.get("PRINTER_STATUS")
-    return {
-        "status": str(printer_status)
-    }
-
-
-@printer.route("/submit", methods=["POST"])
-def submit():
-    password = request.form['password'].encode("utf8")
+@printer.route("/login", methods=["POST"])
+def login():
+    body = request.get_json()
+    pwd: str = body["password"]
+    if not pwd:
+        return {"error": "Missing password"}, 401
+    pwd_bytes = pwd.encode("utf8")
     pwd_hash = os.getenv("PRINTER_PWD").encode("utf8")
-    if checkpw(password, pwd_hash):
-        copies = request.form['copies']
-        file = request.files['file_path']
-        if file.filename == '':
-            print("File non selezionato")
-            return redirect("/printer")
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save("./tmp/" + filename)
-            print(password, copies, file)
-            command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
-            ping_res = os.system(command)
-            if ping_res == 0:
-                remote_print(filename, copies)
-            else:
-                wake_on_lan()
-        else:
-            print("File non in formato PDF")
+    if bcrypt.checkpw(pwd_bytes, pwd_hash):
+        token = TokenService.generate_token()
+        return {
+            "token": token
+        }, 201
     else:
-        print("Password sbagliata")
-    return redirect("/printer")
+        return {"error": "Wrong password"}, 401
+
+
+# @printer.route("/submit", methods=["POST"])
+# def submit():
+#     password = request.form["password"].encode("utf8")
+#     pwd_hash = os.getenv("PRINTER_PWD").encode("utf8")
+#     if checkpw(password, pwd_hash):
+#         copies = request.form["copies"]
+#         file = request.files["file_path"]
+#         if file.filename == "":
+#             print("File non selezionato")
+#             return redirect("/printer")
+#         if file and allowed_file(file.filename):
+#             filename = secure_filename(file.filename)
+#             file.save("./tmp/" + filename)
+#             print(password, copies, file)
+#             command = "timeout 0.2s ping {} -c 1 > /dev/null".format(SERVER_LOCAL_IP)
+#             ping_res = os.system(command)
+#             if ping_res == 0:
+#                 remote_print(filename, copies)
+#             else:
+#                 wake_on_lan()
+#         else:
+#             print("File non in formato PDF")
+#     else:
+#         print("Password sbagliata")
+#     return None, 201
