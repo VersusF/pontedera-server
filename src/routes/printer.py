@@ -1,13 +1,28 @@
 import os
 import bcrypt
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request
 from werkzeug.utils import secure_filename
-from services import TokenService
+from services import PrinterService, TokenService
+from functools import wraps
 
 printer = Blueprint("printer", __name__, template_folder="../templates")
 SERVER_LOCAL_IP = "192.168.178.69"
 COD_MAC = os.environ.get("COD_MAC")
 ALLOWED_EXTENSIONS = {"pdf"}
+
+
+def check_logged(function):
+    """
+    Preprocessing of route to check if the request is authenticated
+    """
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        token = str(request.headers.get("auth"))
+        if TokenService.check_token(token):
+            return function(*args, **kwargs)
+        else:
+            return {"error": "Unauthorized"}, 401
+    return wrapper
 
 
 def allowed_file(filename):
@@ -39,6 +54,25 @@ def login():
         }, 201
     else:
         return {"error": "Wrong password"}, 401
+
+
+@printer.route("/queued-jobs", methods=["GET"])
+@check_logged
+def get_queued_jobs():
+    jobs = PrinterService.get_queued_jobs()
+    return {
+        "queuedJobs": jobs
+    }
+
+
+@printer.route("/submit", methods=["POST"])
+@check_logged
+def submit():
+    # TODO: Implement me
+    job = PrinterService.add_job_to_queue("filename.pdf", "percorso")
+    return {
+        "queuedJob": job,
+    }, 201
 
 
 # @printer.route("/submit", methods=["POST"])
