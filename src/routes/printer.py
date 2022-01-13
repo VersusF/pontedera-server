@@ -1,7 +1,6 @@
 import os
 import bcrypt
 from flask import Blueprint, render_template, request
-from werkzeug.utils import secure_filename
 from services import PrinterService, TokenService
 from functools import wraps
 
@@ -59,6 +58,8 @@ def login():
 @check_logged
 def get_queued_jobs():
     jobs = PrinterService.get_queued_jobs()
+    for j in jobs:
+        del j["path"]
     return {
         "jobs": jobs
     }
@@ -68,6 +69,8 @@ def get_queued_jobs():
 @check_logged
 def get_printed_jobs():
     jobs = PrinterService.get_printed_jobs()
+    for j in jobs:
+        del j["path"]
     return {
         "jobs": jobs
     }
@@ -76,35 +79,18 @@ def get_printed_jobs():
 @printer.route("/submit", methods=["POST"])
 @check_logged
 def submit():
-    # TODO: Implement me
-    job = PrinterService.add_job_to_queue("filename.pdf", "percorso", 8)
-    return {
-        "job": job,
-    }, 201
+    if "copies" not in request.form:
+        return {"error": "copies"}, 400
+    copies = int(request.form["copies"])
+    if copies < 1 or copies > 100:
+        return {"error": "copies"}, 400
 
+    if "print_file" not in request.files:
+        return {"error": "print_file"}, 400
+    file = request.files["print_file"]
+    if file is None or not allowed_file(file.filename):
+        return {"error": "print_file"}, 400
 
-# @printer.route("/submit", methods=["POST"])
-# def submit():
-#     password = request.form["password"].encode("utf8")
-#     pwd_hash = os.getenv("PRINTER_PWD").encode("utf8")
-#     if checkpw(password, pwd_hash):
-#         copies = request.form["copies"]
-#         file = request.files["file_path"]
-#         if file.filename == "":
-#             print("File non selezionato")
-#             return redirect("/printer")
-#         if file and allowed_file(file.filename):
-#             filename = secure_filename(file.filename)
-#             file.save("./tmp/" + filename)
-#             print(password, copies, file)
-#             command = "timeout 0.2s ping {} -c 1 > /dev/null".format(SERVER_LOCAL_IP)
-#             ping_res = os.system(command)
-#             if ping_res == 0:
-#                 remote_print(filename, copies)
-#             else:
-#                 wake_on_lan()
-#         else:
-#             print("File non in formato PDF")
-#     else:
-#         print("Password sbagliata")
-#     return None, 201
+    job = PrinterService.add_job_to_queue(file, 8)
+    del job["path"]
+    return {"job": job}, 201
