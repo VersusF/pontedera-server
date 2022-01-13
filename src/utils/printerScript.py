@@ -1,31 +1,13 @@
 import os
 import json
 import time
-import RedisService
+from services import RedisService
 
 SERVER_LOCAL_IP = '192.168.178.69'
 COD_MAC = os.environ.get("COD_MAC")
 REMOTE_FOLDER = "/home/cod/to_print/"
 QUEUED_JOB_LIST = "QUEUED_JOBS"
 PRINTED_JOB_LIST = "PRINTED_JOBS"
-
-
-def add_job_to_queue(filename: str, path: str, copies: int):
-    job = {
-        "filename": filename,
-        "path": path,
-        "copies": copies,
-        "timestamp": int(time.time() * 1000)
-    }
-    strjob = json.dumps(job)
-    RedisService.push_to_fifo(QUEUED_JOB_LIST, strjob)
-    return job
-
-
-def get_queued_jobs():
-    strjobs = RedisService.get_list(QUEUED_JOB_LIST)
-    jobs = list(map(json.loads, strjobs))
-    return jobs
 
 
 def wake_on_lan():
@@ -59,7 +41,7 @@ if __name__ == "__main__":
             wake_on_lan()
             while not is_server_on():
                 time.sleep(5)
-        jobs_list = get_queued_jobs()
-        for job in jobs_list:
+        while True:
             job = RedisService.pop_from_list(QUEUED_JOB_LIST)
             send_and_print(job["filename"], job["copies"])
+            RedisService.push_to_fifo(PRINTED_JOB_LIST, job)
