@@ -1,5 +1,13 @@
 let token = "";
 
+function init() {
+    document.getElementById("input_password").addEventListener("keyup", event => {
+        if (event.key === "Enter") {
+            login();
+        }
+    });
+}
+
 async function login() {
     const pwd = document.getElementById("input_password").value;
     const baseurl = document.location.origin;

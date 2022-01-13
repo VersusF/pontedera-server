@@ -12,7 +12,7 @@
     <title>Pontedera - Stampa remoto</title>
 </head>
 
-<body>
+<body onload="init()">
     <h1 class="title main-title">Stampante remota</h1>
 
     <h3 class="sub-title title">Stampa comodamente file PDF con la stampante di casa Pontedera</h3>
@@ -36,9 +36,11 @@
             </div>
         </div>
         <div id="main" style="display: none;">
-            <div id="submit"></div>
-            <div id="queued"></div>
-            <div id="printed"></div>
+            <div id="grid">
+                <div id="submit"></div>
+                <div id="queued"></div>
+                <div id="printed"></div>
+            </div>
         </div>
     </div>
 

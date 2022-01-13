@@ -109,3 +109,49 @@ body {
 .toast-hidden {
   bottom: -5em;
 }
+
+/* Logged grid */
+
+#grid {
+  display: grid;
+  gap: 0.2em;
+  grid-template-areas:
+    "submit"
+    "queued"
+    "printed";
+  width: 100%;
+}
+
+@media only screen and (min-width: 481px) {
+  #grid {
+    width: 120ch;
+    grid-template-areas:
+      "submit queued"
+      "printed printed";
+  }
+}
+
+/* Submit */
+
+#submit {
+  grid-area: "submit";
+  background-color: #f80;
+  height: 50px;
+}
+
+/* Queued */
+
+#queued {
+  grid-area: "queued";
+  background-color: #0f8;
+  height: 50px;
+}
+
+/* Printed */
+
+#printed {
+  grid-area: "printed";
+  background-color: #08f;
+  height: 50px;
+  width: 100%;
+}
