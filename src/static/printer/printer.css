@@ -119,22 +119,35 @@ body {
     "submit"
     "queued"
     "printed";
+  grid-template-columns: 1fr;
   width: 100%;
 }
 
 @media only screen and (min-width: 481px) {
   #grid {
     width: 120ch;
+    grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "submit queued"
       "printed printed";
   }
 }
 
+.grid-title {
+  font-family: var(--font-subtitle);
+  color: var(--light);
+}
+
+.grid-table {
+  font-family: var(--font-paragraph);
+  color: var(--light);
+  width: 100%;
+}
+
 /* Submit */
 
 #submit {
-  grid-area: "submit";
+  grid-area: submit;
   background-color: #f80;
   height: 50px;
 }
@@ -142,16 +155,11 @@ body {
 /* Queued */
 
 #queued {
-  grid-area: "queued";
-  background-color: #0f8;
-  height: 50px;
+  grid-area: queued;
 }
 
 /* Printed */
 
 #printed {
-  grid-area: "printed";
-  background-color: #08f;
-  height: 50px;
-  width: 100%;
+  grid-area: printed;
 }
