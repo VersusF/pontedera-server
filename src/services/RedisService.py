@@ -16,7 +16,7 @@ def push_to_fifo(key: str, value: str):
     return redisClient.lpush(key, value)
 
 
-def pop_from_fifo(list_name: str):
+def pop_from_fifo(list_name: str) -> str:
     return redisClient.rpop(list_name)
 
 

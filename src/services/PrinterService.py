@@ -1,15 +1,14 @@
 import json
 import time
 from . import RedisService
-
-QUEUED_JOB_LIST = "QUEUED_JOBS"
-PRINTED_JOB_LIST = "PRINTED_JOBS"
+from utils.config import QUEUED_JOB_LIST
 
 
-def add_job_to_queue(filename: str, path: str):
+def add_job_to_queue(filename: str, path: str, copies: int):
     job = {
         "filename": filename,
         "path": path,
+        "copies": copies,
         "timestamp": int(time.time() * 1000)
     }
     strjob = json.dumps(job)

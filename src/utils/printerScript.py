@@ -1,47 +1,40 @@
 import os
-import json
 import time
+import json
 from services import RedisService
+from utils.config import PRINTED_JOB_LIST, QUEUED_JOB_LIST
 
-SERVER_LOCAL_IP = '192.168.178.69'
-COD_MAC = os.environ.get("COD_MAC")
-REMOTE_FOLDER = "/home/cod/to_print/"
-QUEUED_JOB_LIST = "QUEUED_JOBS"
-PRINTED_JOB_LIST = "PRINTED_JOBS"
+CUPS_IP = os.getenv("CUPS_IP")
+COD_MAC = os.getenv("COD_MAC")
+REMOTE_FOLDER = os.getenv("PRINTER_REMOTE_FOLDER")
 
 
-def wake_on_lan():
+def startup_and_wait():
     """
-    Launch wake on lan command to wake up print server
+    Launch wake on lan command to wake up print server and wait for it to be up and running
     """
-    # Lanciare pacchetto
     os.system('wakeonlan {} > /dev/null'.format(COD_MAC))
+    ping_command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(CUPS_IP)
+    while not os.system(ping_command) == 0:
+        time.sleep(5)
 
 
-def is_server_on():
-    """
-    Ping server to determine if is up
-    """
-    command = 'timeout 0.2s ping {} -c 1 > /dev/null'.format(SERVER_LOCAL_IP)
-    return True if os.system(command) == 0 else False
-
-
-def send_and_print(filename: str, n_copies):
+def send_and_print(filename: str, copies: int):
     local_file_path = "../tmp/" + filename
-    copy = "scp {} cod@{}:{} > /dev/null".format(local_file_path, SERVER_LOCAL_IP, REMOTE_FOLDER)
-    os.system(copy)
+    copy_cmd = "scp {} cod@{}:{} > /dev/null".format(local_file_path, CUPS_IP, REMOTE_FOLDER)
+    os.system(copy_cmd)
     os.remove(local_file_path)
-    remote_print = "ssh cod@{} 'lp -n {} {}' > /dev/null".format(SERVER_LOCAL_IP, n_copies, REMOTE_FOLDER + filename)
-    os.system(remote_print)
+    remote_print_cmd = "ssh cod@{} 'lp -n {} {}' > /dev/null".format(CUPS_IP, copies, REMOTE_FOLDER + filename)
+    os.system(remote_print_cmd)
 
 
 if __name__ == "__main__":
-    if RedisService.get_list_length(QUEUED_JOB_LIST) > 0:
-        if not is_server_on():
-            wake_on_lan()
-            while not is_server_on():
-                time.sleep(5)
-        while True:
-            job = RedisService.pop_from_list(QUEUED_JOB_LIST)
-            send_and_print(job["filename"], job["copies"])
-            RedisService.push_to_fifo(PRINTED_JOB_LIST, job)
+    strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)
+    if strjob is not None:
+        startup_and_wait()
+    while job is not None:
+        job = json.loads(strjob)
+        send_and_print(job["filename"], job["copies"])
+        RedisService.push_to_fifo(PRINTED_JOB_LIST, job)
+        print("Printed", job["filename"], "with", job["copies"], "copies")
+        strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)
