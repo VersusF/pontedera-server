@@ -1,7 +1,7 @@
 import json
 import time
 from . import RedisService
-from utils.config import QUEUED_JOB_LIST
+from utils.config import PRINTED_JOB_LIST, QUEUED_JOB_LIST
 
 
 def add_job_to_queue(filename: str, path: str, copies: int):
@@ -18,5 +18,11 @@ def add_job_to_queue(filename: str, path: str, copies: int):
 
 def get_queued_jobs():
     strjobs = RedisService.get_list(QUEUED_JOB_LIST)
+    jobs = list(map(json.loads, strjobs))
+    return jobs
+
+
+def get_printed_jobs():
+    strjobs = RedisService.get_list(PRINTED_JOB_LIST)
     jobs = list(map(json.loads, strjobs))
     return jobs

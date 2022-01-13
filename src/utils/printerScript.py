@@ -35,6 +35,6 @@ if __name__ == "__main__":
     while job is not None:
         job = json.loads(strjob)
         send_and_print(job["filename"], job["copies"])
-        RedisService.push_to_fifo(PRINTED_JOB_LIST, job)
+        RedisService.push_to_fifo(PRINTED_JOB_LIST, strjob)
         print("Printed", job["filename"], "with", job["copies"], "copies")
         strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)

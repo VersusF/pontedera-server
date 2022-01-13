@@ -60,7 +60,16 @@ def login():
 def get_queued_jobs():
     jobs = PrinterService.get_queued_jobs()
     return {
-        "queuedJobs": jobs
+        "jobs": jobs
+    }
+
+
+@printer.route("/printed-jobs", methods=["GET"])
+@check_logged
+def get_printed_jobs():
+    jobs = PrinterService.get_printed_jobs()
+    return {
+        "jobs": jobs
     }
 
 
@@ -68,9 +77,9 @@ def get_queued_jobs():
 @check_logged
 def submit():
     # TODO: Implement me
-    job = PrinterService.add_job_to_queue("filename.pdf", "percorso")
+    job = PrinterService.add_job_to_queue("filename.pdf", "percorso", 8)
     return {
-        "queuedJob": job,
+        "job": job,
     }, 201
 
 
