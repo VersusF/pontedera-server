@@ -16,8 +16,12 @@ def pop_from_list(list_name: str):
     return redisClient.lpop(list_name)
 
 
-def push_to_list(list_name: str, redis_file):
-    return redisClient.lpush(list_name, redis_file)
+def push_to_fifo(key: str, value: str):
+    return redisClient.lpush(key, value)
+
+
+def get_list(key: str):
+    return redisClient.lrange(key, 0, 1000)
 
 
 def get_list_length(list_name: str):
