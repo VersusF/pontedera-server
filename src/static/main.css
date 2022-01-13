@@ -3,9 +3,11 @@
 :root {
   --light: #ebebfa;
   --dark: #1b1a2c;
+  --dark-accent: #272542;
   --danger: #ec0941;
   --warning: #ecd509;
-  --success: #82ff9eff;
+  --success: #82ff9e;
+  --printer-primary: #ae9b2d;
   --font-title: Montserrat;
   --font-subtitle: "Lora";
   --font-paragraph: Hind Madurai;

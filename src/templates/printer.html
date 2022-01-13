@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='printer/printer.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='printer/printer.js') }}"></script>
     <title>Pontedera - Stampa remoto</title>
 </head>
 
@@ -26,16 +28,29 @@
             È necessario autenticarsi mediante una password. Questo serve per proteggere la stampante da utilizzi
             impropri.
         </p>
+        <div id="login">
+            <div class="login-form">
+                <label for="password" id="label_password">Password:</label>
+                <input type="password" name="password" id="input_password">
+                <button onclick="login()" id="button_login">Login</button>
+            </div>
+        </div>
+        <div id="main" style="display: none;">
+            <div id="submit"></div>
+            <div id="queued"></div>
+            <div id="printed"></div>
+        </div>
     </div>
 
-    <form action="{{args.submit_url}}" method="post" enctype="multipart/form-data">
+    <div id="toast" class="toast toast-hidden"></div>
+
+
+    <!-- <form action="{{args.submit_url}}" method="post" enctype="multipart/form-data">
         <input type="file" name="print_file" id="input_print_file" accept=".pdf">
         <label for="copies">Numero di copie:</label>
         <input type="number" name="copies" id="input_copies" min="1" max="100" step="1" value="1">
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="input_passowrd">
         <input type="submit" value="INVIA">
-    </form>
+    </form> -->
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 body {
   background-color: var(--dark);
+  margin-bottom: 1em;
 }
 
 .title {
@@ -27,7 +28,84 @@ body {
 }
 
 .tutorial {
-    font-family: Hind Madurai;
-    color: var(--light);
-    max-width: 120ch;
+  font-family: var(--font-paragraph);
+  color: var(--light);
+  max-width: 120ch;
+}
+
+/* LOGIN */
+
+.login-form {
+  background-color: var(--dark-accent);
+  max-width: 120ch;
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px -3px #000a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em;
+
+  /* Children */
+  font-family: var(--font-subtitle);
+}
+
+#label_password {
+  color: var(--light);
+  font-size: 1.5em;
+}
+
+#input_password {
+  margin: 0.8em 0;
+  width: 15em;
+  padding: 0.5em;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background-color: var(--light);
+  text-align: center;
+}
+
+#button_login {
+  font-family: var(--font-subtitle);
+  font-weight: 400;
+  font-size: 1.5em;
+  margin: 0.8em 0;
+  padding: 0.5em 3em;
+  border-radius: 15px;
+  outline: none;
+  border: none;
+  background: var(--printer-primary);
+  box-shadow: 2px 2px 10px -5px #000a;
+  cursor: pointer;
+}
+
+/* TOAST */
+
+.toast {
+  position: fixed;
+  width: 80%;
+  left: 10%;
+  right: 10%;
+  border-radius: 15px;
+  color: var(--light);
+  transition: bottom ease-out 0.5s;
+  padding: 1em 0;
+  text-align: center;
+  height: auto;
+}
+
+@media only screen and (min-width: 481px) {
+  .toast {
+    width: 40%;
+    left: 30%;
+    right: 30%;
+  }
+}
+
+.toast-shown {
+  bottom: 2em;
+}
+
+.toast-hidden {
+  bottom: -5em;
 }

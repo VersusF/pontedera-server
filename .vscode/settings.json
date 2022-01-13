@@ -2,5 +2,8 @@
     "python.formatting.autopep8Args": [
         "--max-line-length=120"
     ],
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
     "editor.formatOnSave": true
 }
