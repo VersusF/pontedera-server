@@ -10,3 +10,11 @@ def get(key: str):
 
 def set(key: str, value: Union[str, int, float], expiration_sec=None):
     return redisClient.set(key, value=value, ex=expiration_sec)
+
+
+def push_to_fifo(key: str, value: str):
+    return redisClient.lpush(key, value)
+
+
+def get_list(key: str):
+    return redisClient.lrange(key, 0, 1000)

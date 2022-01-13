@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage/home.css') }}" />
     <title>Pontedera Server</title>
 </head>
 
@@ -20,7 +20,7 @@
             <li class="grid-element" style="background-color: #518F63;">
                 <a href="/cod">
                     <div class="grid-element-icon" style="background-color: #253f2c;">
-                        <img src="{{ url_for('static', filename='cod-icon.svg') }}" alt="Cod icon">
+                        <img src="{{ url_for('static', filename='homepage/cod-icon.svg') }}" alt="Cod icon">
                     </div>
                     <div class="grid-element-text">
                         <h5>Server COD 4</h5>
@@ -31,7 +31,7 @@
             <li class="grid-element" style="background-color: #ae9b2d;">
                 <a href="/printer">
                     <div class="grid-element-icon" style="background-color: #6d651a;">
-                        <img src="{{ url_for('static', filename='printer.svg') }}" alt="Printer icon">
+                        <img src="{{ url_for('static', filename='homepage/printer.svg') }}" alt="Printer icon">
                     </div>
                     <div class="grid-element-text">
                         <h5>Stampante remota</h5>
@@ -42,7 +42,7 @@
             <li class="grid-element" style="background-color: #ae2d2d;">
                 <a href=":9117">
                     <div class="grid-element-icon" style="background-color: #6d1a1a;">
-                        <img src="{{ url_for('static', filename='jackett.svg') }}" alt="Jackett icon">
+                        <img src="{{ url_for('static', filename='homepage/jackett.svg') }}" alt="Jackett icon">
                     </div>
                     <div class="grid-element-text">
                         <h5>Jackett torrent</h5>
@@ -53,7 +53,8 @@
             <li class="grid-element" style="background-color: #2d90ae;">
                 <a href=":8124">
                     <div class="grid-element-icon" style="background-color: #1a536d;">
-                        <img src="{{ url_for('static', filename='Home_Assistant_Logo.svg') }}" alt="HomeAssistant icon">
+                        <img src="{{ url_for('static', filename='homepage/Home_Assistant_Logo.svg') }}"
+                            alt="HomeAssistant icon">
                     </div>
                     <div class="grid-element-text">
                         <h5>Home Assistant</h5>

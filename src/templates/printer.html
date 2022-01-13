@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='printer.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='printer/printer.css') }}" />
     <title>Pontedera - Stampa remoto</title>
 </head>
+
 <body>
     <h1 class="title main-title">Stampante remota</h1>
 
@@ -21,7 +23,8 @@
             Inoltre la stampante è attiva solo durante il giorno. Questo non ti impedisce di caricare file anche durante
             le ore notturne, ma la stampa avverrà il mattino seguente.
             <br>
-            È necessario autenticarsi mediante una password. Questo serve per proteggere la stampante da utilizzi impropri.
+            È necessario autenticarsi mediante una password. Questo serve per proteggere la stampante da utilizzi
+            impropri.
         </p>
     </div>
 
@@ -34,4 +37,5 @@
         <input type="submit" value="INVIA">
     </form>
 </body>
+
 </html>
