@@ -7,7 +7,6 @@ from functools import wraps
 
 printer = Blueprint("printer", __name__, template_folder="../templates")
 SERVER_LOCAL_IP = "192.168.178.69"
-COD_MAC = os.environ.get("COD_MAC")
 ALLOWED_EXTENSIONS = {"pdf"}
 
 

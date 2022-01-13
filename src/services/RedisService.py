@@ -16,5 +16,9 @@ def push_to_fifo(key: str, value: str):
     return redisClient.lpush(key, value)
 
 
+def pop_from_fifo(list_name: str):
+    return redisClient.rpop(list_name)
+
+
 def get_list(key: str):
     return redisClient.lrange(key, 0, 1000)
