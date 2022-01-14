@@ -32,9 +32,7 @@ def allowed_file(filename):
 
 @printer.route("", methods=["GET"])
 def main():
-    return render_template("printer.html", args={
-        "submit_url": "printer/submit"
-    })
+    return render_template("printer.html")
 
 
 @printer.route("/login", methods=["POST"])

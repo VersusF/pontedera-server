@@ -1,5 +1,5 @@
-import logging
-from flask import Flask, render_template, jsonify
+from http.client import HTTPException
+from flask import Flask, render_template
 from routes.cod import cod
 from routes.printer import printer
 from dotenv import load_dotenv
@@ -19,7 +19,9 @@ def default():
 
 @app.errorhandler(Exception)
 def handle_error(e: Exception):
-    logging.error("Internal error", {"error", str(e)})
+    if isinstance(e, HTTPException):
+        return e
+    print("Internal error", {"error", str(e)})
     return "UnexpectedError", 500
 
 

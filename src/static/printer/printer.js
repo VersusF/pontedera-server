@@ -87,6 +87,16 @@ function addJobsToTable(tableId, jobs) {
     }
 }
 
+function updateFilename() {
+    const label = document.getElementById("p-input-filename");
+    const fileInput = document.getElementById("input-print-file").files[0];
+    label.innerHTML = fileInput.name;
+}
+
+function submit() {
+    // TODO: implement me
+}
+
 /**
  * @param {string} msg 
  */
