@@ -1,4 +1,8 @@
-let token = "";
+const SESSION_STORAGE_TOKEN_KEY = "token";
+
+const axiosClient = axios.create({
+    baseURL: window.location.origin + "/printer",
+});
 
 function init() {
     document.getElementById("input_password").addEventListener("keyup", event => {
@@ -6,22 +10,41 @@ function init() {
             login();
         }
     });
+    // Check if old token is still valid
+    const oldToken = sessionStorage.getItem(SESSION_STORAGE_TOKEN_KEY) || "";
+    axiosClient.get("/check-token", {
+        headers: { auth: oldToken }
+    }).then(() => {
+        // Old token is still valid
+        axiosClient.defaults.headers.common.auth = oldToken;
+        afterLogin().catch(e => {
+            console.error(e);
+            sessionStorage.removeItem(SESSION_STORAGE_TOKEN_KEY);
+            toastError("Errore interno");
+        });
+    }).catch(() => {
+        // Old token is not valid, show login screen
+        const loginDiv = document.getElementById("login");
+        loginDiv.style.display = "block";
+    });
 }
 
 async function login() {
     const pwd = document.getElementById("input_password").value;
-    const baseurl = document.location.origin;
     try {
-        const { data } = await axios.post(baseurl + "/printer/login", {
+        const { data } = await axiosClient.post("/login", {
             password: pwd,
         });
-        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem(SESSION_STORAGE_TOKEN_KEY, data.token);
+        axiosClient.defaults.headers.common.auth = data.token;
         afterLogin().then(() => {
             toastSuccess("Benvenuto");
-        }).catch(() => {
+        }).catch(e => {
+            console.error(e);
             toastError("Errore interno");
         });
-    } catch (error) {
+    } catch (e) {
+        console.error(e);
         toastError("Password errata");
     }
 }
@@ -33,18 +56,10 @@ async function afterLogin() {
     mainDiv.style.display = "block";
 
     const baseurl = document.location.origin;
-    const queuedRequest = await axios.get(baseurl + "/printer/queued-jobs", {
-        headers: {
-            "auth": sessionStorage.getItem("token")
-        }
-    });
+    const queuedRequest = await axiosClient.get("/queued-jobs");
     addJobsToTable("queued-jobs", queuedRequest.data.jobs);
 
-    const printedRequest = await axios.get(baseurl + "/printer/printed-jobs", {
-        headers: {
-            "auth": sessionStorage.getItem("token")
-        }
-    });
+    const printedRequest = await axiosClient.get("/printed-jobs");
     addJobsToTable("printed-jobs", printedRequest.data.jobs);
 }
 

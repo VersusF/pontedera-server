@@ -54,6 +54,12 @@ def login():
         return {"error": "Wrong password"}, 401
 
 
+@printer.route("/check-token", methods=["GET"])
+@check_logged
+def check_token():
+    return "", 204
+
+
 @printer.route("/queued-jobs", methods=["GET"])
 @check_logged
 def get_queued_jobs():
