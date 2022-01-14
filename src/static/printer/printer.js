@@ -15,7 +15,7 @@ async function login() {
         const { data } = await axios.post(baseurl + "/printer/login", {
             password: pwd,
         });
-        token = data.token;
+        sessionStorage.setItem("token", data.token);
         afterLogin().then(() => {
             toastSuccess("Benvenuto");
         }).catch(() => {
@@ -35,14 +35,14 @@ async function afterLogin() {
     const baseurl = document.location.origin;
     const queuedRequest = await axios.get(baseurl + "/printer/queued-jobs", {
         headers: {
-            "auth": token
+            "auth": sessionStorage.getItem("token")
         }
     });
     addJobsToTable("queued-jobs", queuedRequest.data.jobs);
 
     const printedRequest = await axios.get(baseurl + "/printer/printed-jobs", {
         headers: {
-            "auth": token
+            "auth": sessionStorage.getItem("token")
         }
     });
     addJobsToTable("printed-jobs", printedRequest.data.jobs);

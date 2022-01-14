@@ -32,7 +32,7 @@ if __name__ == "__main__":
     strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)
     if strjob is not None:
         startup_and_wait()
-    while job is not None:
+    while strjob is not None:
         job = json.loads(strjob)
         send_and_print(job["filename"], job["copies"])
         RedisService.push_to_fifo(PRINTED_JOB_LIST, strjob)
