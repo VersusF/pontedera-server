@@ -20,6 +20,9 @@ def startup_and_wait():
 
 
 def send_and_print(filename: str, copies: int):
+    """
+    Send file to remote host and invoke print command
+    """
     local_file_path = "./tmp/" + filename
     copy_cmd = "scp {} cod@{}:{} > /dev/null".format(local_file_path, CUPS_IP, REMOTE_FOLDER)
     os.system(copy_cmd)
