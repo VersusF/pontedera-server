@@ -20,10 +20,11 @@ def send_and_print(filename: str, copies: int):
 if __name__ == "__main__":
     strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)
     if strjob is not None:
-        WorkerService.startup_and_wait()
+        WorkerService.request_worker()
     while strjob is not None:
         job = json.loads(strjob)
         send_and_print(job["filename"], job["copies"])
         RedisService.push_to_fifo(PRINTED_JOB_LIST, strjob)
         print("Printed", job["filename"], "with", job["copies"], "copies")
         strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)
+    WorkerService.release_worker()

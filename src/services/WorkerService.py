@@ -1,11 +1,34 @@
 import os
 import time
+from services import RedisService
 
 WORKER_MAC = os.getenv("WORKER_MAC")
 WORKER_IP = os.getenv("WORKER_IP")
+WORKER_REQUESTS_KEY = "worker_requests"
 
 
-def startup_and_wait():
+def request_worker():
+    """
+    Register a new process that requires the worker machine
+    """
+    RedisService.incr(WORKER_REQUESTS_KEY)
+    _startup_and_wait()
+
+
+def release_worker():
+    """
+    De-register a process from the worker machine
+    If no more processes are registered, shut down the worker
+    """
+    active_workers = RedisService.decr(WORKER_REQUESTS_KEY)
+    if active_workers <= 0:
+        run_command("shutdown now")
+    elif active_workers < 0:
+        print("WorkerService: Deregistering a process which was not registered")
+        RedisService.set(WORKER_REQUESTS_KEY, 0)
+
+
+def _startup_and_wait():
     """
     Launch wake on lan command to wake up print server and wait for it to be up and running
     """

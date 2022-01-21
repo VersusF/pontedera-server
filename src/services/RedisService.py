@@ -22,3 +22,11 @@ def pop_from_fifo(list_name: str) -> str:
 
 def get_list(key: str):
     return redisClient.lrange(key, 0, 1000)
+
+
+def incr(key: str):
+    return redisClient.incr(key)
+
+
+def decr(key: str):
+    return redisClient.decr(key)
