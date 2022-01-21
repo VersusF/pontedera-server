@@ -1,6 +1,6 @@
 import random
 import string
-from . import RedisService
+from services import RedisService
 
 TOKEN_LENGTH = 32
 TOKEN_KEY_PREFIX = "token:"

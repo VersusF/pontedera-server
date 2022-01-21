@@ -31,5 +31,9 @@ redis-cli: ## Opens a shell on redis
 	docker exec -it pontedera-redis /usr/local/bin/redis-cli
 
 .PHONY: generate-pwd-hash
-generate-pwd-hash: ## Stop pontedera server
+generate-pwd-hash: ## Launch script to generate password hashes
 	docker exec -it pontedera python3 src/utils/pwdhash.py
+
+.PHONY: print-queued-jobs
+print-queued-jobs: ## Launch script to print queued jobs
+	docker exec -it pontedera python3 src/utils/printerScript.py

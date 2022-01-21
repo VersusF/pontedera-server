@@ -3,7 +3,7 @@ import time
 import os
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
-from . import RedisService
+from services import RedisService
 from utils.config import PRINTED_JOB_LIST, QUEUED_JOB_LIST
 
 
