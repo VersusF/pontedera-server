@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='printer/printer.css') }}" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.0/build/global/luxon.min.js"></script>
     <script src="{{ url_for('static', filename='printer/printer.js') }}"></script>
     <title>Pontedera - Stampa remoto</title>
 </head>
@@ -50,7 +51,7 @@
                             </svg>
                             Carica
                         </label>
-                        <p id="p-input-filename">nomefile.pdf</p>
+                        <p id="p-input-filename">Nessun file selezionato</p>
                         <input type="file" name="print-file" id="input-print-file" accept=".pdf" style="display: none;"
                             oninput="updateFilename()">
                     </div>

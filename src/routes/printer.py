@@ -95,6 +95,6 @@ def submit():
     if file is None or not allowed_file(file.filename):
         return {"error": "print_file"}, 400
 
-    job = PrinterService.add_job_to_queue(file, 8)
+    job = PrinterService.add_job_to_queue(file, copies)
     del job["path"]
     return {"job": job}, 201

@@ -55,7 +55,6 @@ async function afterLogin() {
     loginDiv.style.display = "none";
     mainDiv.style.display = "block";
 
-    const baseurl = document.location.origin;
     const queuedRequest = await axiosClient.get("/queued-jobs");
     addJobsToTable("queued-jobs", queuedRequest.data.jobs);
 
@@ -72,7 +71,9 @@ function addJobsToTable(tableId, jobs) {
     for (const j of jobs) {
         const row = document.createElement("tr");
         const dateCell = document.createElement("td");
-        dateCell.innerHTML = j.timestamp;
+        dateCell.innerHTML = luxon.DateTime
+            .fromMillis(parseInt(j.timestamp))
+            .toFormat("dd/LL/yyyy HH:mm");
         row.appendChild(dateCell);
 
         const nameCell = document.createElement("td");
@@ -93,8 +94,29 @@ function updateFilename() {
     label.innerHTML = fileInput.name;
 }
 
-function submit() {
-    // TODO: implement me
+async function submit() {
+    const fileInput = document.getElementById("input-print-file").files[0];
+    const copies = parseInt(document.getElementById("input-copies").value);
+
+    if (isNaN(copies) || copies < 1 || copies > 100) {
+        toastWarn("Copie non valide");
+        return;
+    }
+    if (fileInput == null) {
+        toastWarn("File non valido");
+        return;
+    }
+
+    try {
+        const data = new FormData();
+        data.append("copies", copies);
+        data.append("print_file", fileInput);
+        const { data: { job } } = await axiosClient.post("/submit", data);
+        addJobsToTable("queued-jobs", [job]);
+        toastSuccess("File aggiunto alla coda di stampa");
+    } catch (e) {
+        toastError("Errore inviando il file");
+    }
 }
 
 /**

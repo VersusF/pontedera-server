@@ -94,14 +94,6 @@ body {
   height: auto;
 }
 
-@media only screen and (min-width: 481px) {
-  .toast {
-    width: 40%;
-    left: 30%;
-    right: 30%;
-  }
-}
-
 .toast-shown {
   bottom: 2em;
 }
@@ -123,16 +115,6 @@ body {
   width: 100%;
 }
 
-@media only screen and (min-width: 481px) {
-  #grid {
-    width: 120ch;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "submit queued"
-      "printed printed";
-  }
-}
-
 .grid-title {
   font-family: var(--font-subtitle);
   color: var(--light);
@@ -146,13 +128,21 @@ body {
   width: 100%;
 }
 
+.grid-table thead {
+  font-weight: bold;
+}
+
+.grid-table td:nth-child(3) {
+  text-align: right;
+}
+
 /* Submit */
 
 #submit {
   grid-area: submit;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 #upload-div {
@@ -228,4 +218,22 @@ body {
 
 #printed {
   grid-area: printed;
+}
+
+@media only screen and (min-width: 481px) {
+  .toast {
+    width: 40%;
+    left: 30%;
+    right: 30%;
+  }
+  #grid {
+    width: 120ch;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "submit queued"
+      "printed printed";
+  }
+  #submit {
+    align-items: flex-start;
+  }
 }
