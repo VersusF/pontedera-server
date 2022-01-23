@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import request, render_template, redirect, Blueprint
 import os
 import socket
 from threading import Timer
@@ -8,17 +8,16 @@ import requests
 
 SERVER_LOCAL_IP = '192.168.178.69'
 SERVER_DDNS = 'pontedera.duckdns.org'
-PWD_FILE = 'password.txt'
-MAC_FILE = 'mac.txt'
+COD_PWD = os.environ.get("COD_PWD")
+COD_MAC = os.environ.get("COD_MAC")
 
 global_status = 'DOWN'
-right_pwd = ''
-mac = ''
 
 
-app = Flask(__name__)
+cod = Blueprint("cod", __name__, template_folder="../templates")
 
-### UTILS
+# UTILS
+
 
 def set_status_down():
     global global_status
@@ -27,7 +26,7 @@ def set_status_down():
 
 def wake_on_lan():
     # Lanciare pacchetto
-    os.system('wakeonlan {} > /dev/null'.format(mac))
+    os.system('wakeonlan {} > /dev/null'.format(COD_MAC))
     # Mettere handler che dopo 1 minuto imposta global status a 'DOWN'
     Timer(60, set_status_down).start()
     pass
@@ -38,9 +37,9 @@ def shutdown_server():
     Timer(120, set_status_down).start()
 
 
-### FLASK ROUTES
+# FLASK ROUTES
 
-@app.route('/', methods=['GET'])
+@cod.route('', methods=['GET'])
 def main():
     global global_status
     args = {}
@@ -50,16 +49,18 @@ def main():
     if args['status'] == 'UP' or args['status'] == 'LOADING':
         ip = socket.gethostbyname(SERVER_DDNS)
         args['ip'] = ip
-    return render_template('index.html', args=args)
+    return render_template('cod.html', args=args)
 
 
-@app.route('/', methods=['POST'])
+@cod.route('', methods=['POST'])
 def login():
     global global_status
     args = {}
     password = request.form['password'].encode()
     password_hash = hashlib.sha256(password).hexdigest()
-    if password_hash == right_pwd:
+    print("Sto accendendo", password_hash, )
+    if password_hash == COD_PWD:
+        print("Passord ok")
         wake_on_lan()
         ip = socket.gethostbyname(SERVER_DDNS)
         global_status = 'LOADING'
@@ -68,34 +69,20 @@ def login():
         return redirect('/')
     else:
         args['status'] = 'WRONG_PWD'
-        return render_template('index.html', args=args)
+        return render_template('cod.html', args=args)
 
 
-@app.route("/shutdown", methods=["POST"])
+@cod.route("/shutdown", methods=["POST"])
 def shutdown():
     global global_status
     try:
         password = request.json['password'].encode()
         password_hash = hashlib.sha256(password).hexdigest()
-        if password_hash == right_pwd:
+        if password_hash == COD_PWD:
             shutdown_server()
             global_status = 'SHUTTING DOWN'
             return '', 201
         else:
             return '', 401
     except:
-       return '', 400 
-
-
-@app.before_first_request
-def initialize():
-    global right_pwd, mac
-    folder = os.path.dirname(__file__) + '/'
-    with open(folder + PWD_FILE, 'r') as f:
-        right_pwd = f.readline().strip()
-    with open(folder + MAC_FILE, 'r') as f:
-        mac = f.readline().strip()
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+        return '', 400

@@ -1,0 +1,6 @@
+bcrypt
+flask
+python-dotenv
+redis
+requests
+uwsgi

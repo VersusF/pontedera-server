@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='printer/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='printer/printer.css') }}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.0/build/global/luxon.min.js"></script>
+    <script src="{{ url_for('static', filename='printer/printer.js') }}"></script>
+    <title>Pontedera - Stampa remoto</title>
+</head>
+
+<body onload="init()">
+    <h1 class="title main-title">Stampante remota</h1>
+
+    <h3 class="sub-title title">Stampa comodamente file PDF con la stampante di casa Pontedera</h3>
+
+    <div class="content">
+        <p class="tutorial">
+            Puoi stampare qualsiasi file in formato PDF su fogli A4.
+            <br>
+            Nota che i file non sono stampati immediatamente, ma può volerci fino a un'ora perché la stampa avvenga.
+            Inoltre la stampante è attiva solo durante il giorno. Questo non ti impedisce di caricare file anche durante
+            le ore notturne, ma la stampa avverrà il mattino seguente.
+            <br>
+            È necessario autenticarsi mediante una password. Questo serve per proteggere la stampante da utilizzi
+            impropri.
+        </p>
+        <div id="login" style="display: none;">
+            <div class="login-form">
+                <label for="password" id="label_password">Password:</label>
+                <input type="password" name="password" id="input_password">
+                <button onclick="login()" id="button_login">Login</button>
+            </div>
+        </div>
+        <div id="main" style="display: none;">
+            <div id="grid">
+                <div id="submit">
+                    <h4 class="title grid-title">Stampa nuovo file</h4>
+                    <div id="upload-div">
+                        <label for="input-print-file" id="label-print-file">
+                            <span class="material-icons">cloud_upload</span>
+                            Carica
+                        </label>
+                        <p id="p-input-filename">Nessun file selezionato</p>
+                        <input type="file" name="print-file" id="input-print-file" accept=".pdf" style="display: none;"
+                            oninput="updateFilename()">
+                    </div>
+
+                    <label for="input-copies" id="label-copies">N° copie:</label>
+                    <input type="number" name="copies" id="input-copies" step="1" min="1" max="100" value="1">
+
+                    <button onclick="submit()" id="button-print">Stampa</button>
+                </div>
+                <div id="queued">
+                    <h4 class="title grid-title">Lavori in coda</h4>
+                    <table class="grid-table">
+                        <thead>
+                            <tr>
+                                <td>Data</td>
+                                <td>Nome</td>
+                                <td>Copie</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody id="queued-jobs"></tbody>
+                    </table>
+                </div>
+                <div id="printed">
+                    <h4 class="title grid-title">Lavori stampati</h4>
+                    <table class="grid-table">
+                        <thead>
+                            <tr>
+                                <td>Data</td>
+                                <td>Nome</td>
+                                <td>Copie</td>
+                            </tr>
+                        </thead>
+                        <tbody id="printed-jobs"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast toast-hidden"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="16" height="16" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(0,20)">
+  <circle cx="8" cy="-12" r="8" fill="#1b1a2c" stroke-width="6.117"/>
+  <path d="m12.667-14.667h-0.66667v-3.3333h-8v3.3333h-0.66667c-1.1067 0-2 0.89333-2 2v4h2.6667v2.6667h8v-2.6667h2.6667v-4c0-1.1067-0.89333-2-2-2zm-7.3333-2h5.3333v2h-5.3333zm5.3333 8v1.3333h-5.3333v-2.6667h5.3333zm1.3333-1.3333v-1.3333h-8v1.3333h-1.3333v-2.6667c0-0.36667 0.3-0.66667 0.66667-0.66667h9.3333c0.36667 0 0.66667 0.3 0.66667 0.66667v2.6667z" fill="#ebebfa" stroke-width=".667"/>
+  <circle cx="12" cy="-12.333" r=".66667" fill="#ebebfa" stroke-width=".667"/>
+ </g>
+</svg>
