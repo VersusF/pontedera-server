@@ -1,6 +1,6 @@
 import os
 import json
-from services import RedisService, WorkerService
+from services import RedisService, WorkerService, PrinterService
 from utils.config import PRINTED_JOB_LIST, QUEUED_JOB_LIST
 
 REMOTE_FOLDER = os.getenv("PRINTER_REMOTE_FOLDER")
@@ -20,11 +20,13 @@ def send_and_print(filename: str, copies: int):
 if __name__ == "__main__":
     strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)
     if strjob is not None:
+        lock = RedisService.get_lock(PrinterService.QUEUE_LOCK, 60)
         WorkerService.request_worker()
-    while strjob is not None:
-        job = json.loads(strjob)
-        send_and_print(job["filename"], job["copies"])
-        RedisService.push_to_fifo(PRINTED_JOB_LIST, strjob)
-        print("Printed", job["filename"], "with", job["copies"], "copies")
-        strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)
-    WorkerService.release_worker()
+        while strjob is not None:
+            job = json.loads(strjob)
+            send_and_print(job["filename"], job["copies"])
+            RedisService.push_to_fifo(PRINTED_JOB_LIST, strjob)
+            print("Printed", job["filename"], "with", job["copies"], "copies")
+            strjob = RedisService.pop_from_fifo(QUEUED_JOB_LIST)
+        WorkerService.release_worker()
+        RedisService.release_lock(PrinterService.QUEUE_LOCK, lock)

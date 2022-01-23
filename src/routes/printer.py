@@ -98,3 +98,10 @@ def submit():
     job = PrinterService.add_job_to_queue(file, copies)
     del job["path"]
     return {"job": job}, 201
+
+
+@printer.route("/queued-jobs/<job_id>", methods=["DELETE"])
+@check_logged
+def delete_queued_job(job_id: str):
+    PrinterService.remove_queued_job(job_id)
+    return "", 204
