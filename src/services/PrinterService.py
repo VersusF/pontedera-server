@@ -13,7 +13,6 @@ def add_job_to_queue(file: FileStorage, copies: int):
     if not os.path.isdir("./tmp"):
         print("Creating tmp folder")
         os.mkdir("./tmp")
-    print(os.system("pwd"))
     filename = secure_filename(file.filename)
     path = "./tmp/" + filename
     file.save(path)
@@ -46,6 +45,5 @@ def remove_queued_job(job_id: str):
     lock = RedisService.get_lock(QUEUE_LOCK)
     strjobs = RedisService.get_list(QUEUED_JOB_LIST)
     new_jobs = list(filter(lambda x: '"timestamp": ' + job_id not in x, strjobs))
-    print(new_jobs)
     RedisService.reset_fifo(QUEUED_JOB_LIST, *new_jobs)
     RedisService.release_lock(QUEUE_LOCK, lock)

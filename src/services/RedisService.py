@@ -24,7 +24,8 @@ def pop_from_fifo(key: str) -> str:
 
 def reset_fifo(key: str, *values: str):
     redisClient.delete(key)
-    redisClient.lpush(key, *values)
+    if len(values) > 0:
+        redisClient.lpush(key, *values)
 
 
 def get_list(key: str):
