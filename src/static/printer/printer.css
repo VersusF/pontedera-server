@@ -214,6 +214,16 @@ body {
   grid-area: queued;
 }
 
+#queued-jobs td:nth-child(4) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trash-icon {
+  cursor: pointer;
+}
+
 /* Printed */
 
 #printed {

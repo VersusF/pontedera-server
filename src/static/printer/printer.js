@@ -54,19 +54,26 @@ async function afterLogin() {
     const mainDiv = document.getElementById("main");
     loginDiv.style.display = "none";
     mainDiv.style.display = "block";
+    await refresh();
+}
 
+async function refresh() {
     const queuedRequest = await axiosClient.get("/queued-jobs");
-    addJobsToTable("queued-jobs", queuedRequest.data.jobs);
+    document.getElementById("queued-jobs").innerHTML = "";
+    addJobsToTable("queued-jobs", queuedRequest.data.jobs, true);
 
     const printedRequest = await axiosClient.get("/printed-jobs");
-    addJobsToTable("printed-jobs", printedRequest.data.jobs);
+    document.getElementById("printed-jobs").innerHTML = "";
+    addJobsToTable("printed-jobs", printedRequest.data.jobs, false);
 }
 
 /**
  * @param {string} tableId 
  * @param {{ timestamp: number, filename: string, copies: number }[]} jobs 
+ * @param {boolean} trashButton whether to include button to delete the job
+ * @param {boolean} prepend whether to prepnd to the table instead of append 
  */
-function addJobsToTable(tableId, jobs) {
+function addJobsToTable(tableId, jobs, trashButton = false, prepend = false) {
     const queuedTable = document.getElementById(tableId);
     for (const j of jobs) {
         const row = document.createElement("tr");
@@ -84,7 +91,32 @@ function addJobsToTable(tableId, jobs) {
         copiesCell.innerHTML = j.copies;
         row.appendChild(copiesCell);
 
-        queuedTable.appendChild(row);
+        if (trashButton) {
+            const trashCell = document.createElement("td");
+            trashCell.innerHTML = '<span class="material-icons trash-icon">delete_outline</span>';
+            trashCell.addEventListener("click", () => _deleteQueuedJob(j.timestamp));
+            row.appendChild(trashCell);
+        }
+
+        if (prepend) {
+            queuedTable.prepend(row);
+        } else {
+            queuedTable.appendChild(row);
+        }
+    }
+}
+
+/**
+ * Delete a queued job from server
+ * @param {number} jobId 
+ */
+async function _deleteQueuedJob(jobId) {
+    try {
+        await axiosClient.delete("/queued-jobs/" + jobId);
+        await refresh();
+        toastSuccess("Lavoro rimosso dalla coda");
+    } catch (e) {
+        toastError("Errore rimuovendo il lavoro dalla coda");
     }
 }
 
@@ -112,7 +144,7 @@ async function submit() {
         data.append("copies", copies);
         data.append("print_file", fileInput);
         const { data: { job } } = await axiosClient.post("/submit", data);
-        addJobsToTable("queued-jobs", [job]);
+        addJobsToTable("queued-jobs", [job], true, true);
         toastSuccess("File aggiunto alla coda di stampa");
     } catch (e) {
         toastError("Errore inviando il file");
