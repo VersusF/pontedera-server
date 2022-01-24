@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300&family=Lora:ital@1&family=Montserrat:wght@700&display=swap");
+
+:root {
+  --light: #ebebfa;
+  --dark: #1b1a2c;
+  --dark-accent: #272542;
+  --danger: #ec0941;
+  --warning: #ecd509;
+  --success: #82ff9e;
+  --printer-primary: #ae9b2d;
+  --font-title: Montserrat;
+  --font-subtitle: "Lora";
+  --font-paragraph: Hind Madurai;
+  --card-height: 6em;
+}
