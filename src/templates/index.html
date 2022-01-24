@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='homepage/favicon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='homepage/home.css') }}" />
+    <script src="{{ url_for('static', filename='homepage/home.js') }}"></script>
     <title>Pontedera Server</title>
 </head>
 
@@ -41,7 +42,7 @@
                 </a>
             </li>
             <li class="grid-element" style="background-color: #ae2d2d;">
-                <a href=":9117">
+                <a onclick="goToPort(9117)">
                     <div class="grid-element-icon" style="background-color: #6d1a1a;">
                         <img src="{{ url_for('static', filename='homepage/jackett.svg') }}" alt="Jackett icon">
                     </div>
@@ -52,7 +53,7 @@
                 </a>
             </li>
             <li class="grid-element" style="background-color: #2d90ae;">
-                <a href=":8124">
+                <a onclick="goToPort(8124)">
                     <div class="grid-element-icon" style="background-color: #1a536d;">
                         <img src="{{ url_for('static', filename='homepage/Home_Assistant_Logo.svg') }}"
                             alt="HomeAssistant icon">
