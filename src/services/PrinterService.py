@@ -47,3 +47,4 @@ def remove_queued_job(job_id: str):
     new_jobs = list(filter(lambda x: '"timestamp": ' + job_id not in x, strjobs))
     RedisService.reset_fifo(QUEUED_JOB_LIST, *new_jobs)
     RedisService.release_lock(QUEUE_LOCK, lock)
+    # TODO: Remove file from tmp directory

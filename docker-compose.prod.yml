@@ -6,19 +6,20 @@ services:
     build: .
     container_name: pontedera
     volumes:
-      - ./src/:/usr/src/app/src/:ro
       - ./tmp:/usr/src/app/tmp:rw
-    ports:
-      - "5000:5000"
     depends_on:
       - redis
     env_file:
       - .env
     environment:
-      - PYTHONPATH="$PYTHONPATH":/usr/src/app/src
+      - PYTHONPATH=/usr/src/app/src
     restart: always
-    command: uwsgi --ini src/wsgi.ini
+    network_mode: host
+    command: uwsgi --ini src/pontedera.ini
 
   redis:
     image: redis:latest
     container_name: pontedera-redis
+    restart: always
+    ports:
+      - "6379:6379"

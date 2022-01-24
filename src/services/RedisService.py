@@ -3,7 +3,7 @@ from redis import Redis
 import random
 import time
 
-redisClient = Redis(host="redis", port=6379, db=0, decode_responses=True)
+redisClient = Redis(host="localhost", port=6379, db=0, decode_responses=True)
 
 
 def get(key: str):
@@ -20,6 +20,10 @@ def push_to_fifo(key: str, value: str):
 
 def pop_from_fifo(key: str) -> str:
     return redisClient.rpop(key)
+
+
+def undo_fifo_pop(key: str, value: str):
+    return redisClient.rpush(key, value)
 
 
 def reset_fifo(key: str, *values: str):

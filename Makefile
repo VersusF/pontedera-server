@@ -37,3 +37,8 @@ generate-pwd-hash: ## Launch script to generate password hashes
 .PHONY: print-queued-jobs
 print-queued-jobs: ## Launch script to print queued jobs
 	docker exec -it pontedera python3 src/utils/printerScript.py
+
+.PHONY: after-prod-build
+after-prod-build: ## Permorm extra actions after production build
+	docker exec -it pontedera ssh-keygen
+	docker exec -it pontedera ssh-copy-id -i /root/.ssh/id_rsa.pub `cat .env | grep WORKER_USER | cut -d= -f2`@`cat .env | grep WORKER_IP | cut -d= -f2`

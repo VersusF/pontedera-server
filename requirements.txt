@@ -1,6 +1,7 @@
-bcrypt
-flask
-python-dotenv
-redis
-requests
-uwsgi
+Flask==2.0.2
+python-dotenv==0.19.2
+bcrypt==3.2.0
+redis==4.1.1
+requests==2.27.1
+Werkzeug==2.0.2
+uwsgi==2.0.20

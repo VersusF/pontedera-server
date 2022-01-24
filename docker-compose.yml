@@ -16,6 +16,7 @@ services:
       - .env
     environment:
       - PYTHONPATH="$PYTHONPATH":/usr/src/app/src
+    command: python3 src/pontedera.py
 
   redis:
     image: redis:latest
